@@ -1,4 +1,2 @@
-    <div *ngIf="authService.loading()" class="fixed inset-0 bg-zinc-950 flex items-center justify-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
-    </div>
-    <router-outlet *ngIf="!authService.loading()"></router-outlet>
+<app-global-loader *ngIf="authService.loading()"></app-global-loader>
+<router-outlet *ngIf="!authService.loading()"></router-outlet>

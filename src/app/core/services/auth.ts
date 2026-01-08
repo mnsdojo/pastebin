@@ -34,25 +34,27 @@ export class AuthService {
   }
 
   private initAuth() {
-    console.log('🔍 initAuth called');
-    const token = this.getToken();
+  const token = this.getToken();
 
-    if (token) {
-      this.getCurrentUser().subscribe({
-        next: (user) => {
-          this.user.set(user);
-          this.isAuthenticated.set(true);
-          this.loading.set(false);
-        },
-        error: (error) => {
-          this.clearAuth();
-          this.loading.set(false);
-        },
-      });
-    } else {
-      this.loading.set(false);
-    }
+  if (!token) {
+    this.loading.set(false);
+    return;
   }
+
+  this.getCurrentUser().subscribe({
+    next: (user) => {
+      this.user.set(user);
+      this.isAuthenticated.set(true);
+      this.loading.set(false);
+    },
+    error: (error) => {
+      if (error.status === 401) {
+        this.clearAuth();
+      }
+      this.loading.set(false);
+    },
+  });
+}
   login(credentials: LoginCredentials): Observable<LoginReturnType> {
     return this.http.post<LoginReturnType>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response) => {
