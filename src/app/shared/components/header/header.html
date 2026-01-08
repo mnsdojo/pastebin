@@ -1,0 +1,88 @@
+<header [class]="'border-b ' + themeConfig().border + ' ' + themeConfig().card + ' backdrop-blur'">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a routerLink="/" class="flex items-center gap-2">
+        <lucide-icon [img]="FileText" class="w-6 h-6 text-emerald-500"></lucide-icon>
+        <h1 class="text-xl font-semibold">PasteBinX</h1>
+      </a>
+
+      <!-- Navigation -->
+      <nav class="flex items-center gap-6">
+        <a
+          routerLink="/"
+          routerLinkActive="text-emerald-500"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-sm transition-colors text-zinc-400 hover:text-zinc-100"
+        >
+          Create
+        </a>
+        <a
+          routerLink="/explore"
+          routerLinkActive="text-emerald-500"
+          class="text-sm transition-colors text-zinc-400 hover:text-zinc-100"
+        >
+          Explore
+        </a>
+        <a
+          *ngIf="authService.isAuthenticated()"
+          routerLink="/my-pastes"
+          routerLinkActive="text-emerald-500"
+          class="text-sm transition-colors text-zinc-400 hover:text-zinc-100"
+        >
+          My Pastes
+        </a>
+      </nav>
+
+      <!-- Right side actions -->
+      <div class="flex items-center gap-3">
+        <!-- Theme Button -->
+        <button
+          (click)="toggleThemeSelector()"
+          [class]="'p-2 rounded-lg transition-colors ' + themeConfig().hover"
+          title="Change theme"
+        >
+          <lucide-icon [img]="Palette" class="w-5 h-5"></lucide-icon>
+        </button>
+
+        <!-- Auth Buttons (placeholder for now) -->
+        <ng-container *ngIf="authService.isAuthenticated(); else guestButtons">
+          <div class="flex items-center gap-3">
+            <div [class]="'flex items-center gap-2 px-3 py-2 rounded-lg ' + themeConfig().card">
+              <lucide-icon [img]="UserIcon" [size]="16" class="text-emerald-500"></lucide-icon>
+              <span class="text-sm font-medium">{{ authService.user()?.username }}</span>
+            </div>
+
+            <button
+              [class]="
+                'flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ' +
+                themeConfig().hover
+              "
+              (click)="logout()"
+            >
+              <lucide-icon [img]="LogOut" [size]="16"></lucide-icon>
+              <span class="text-sm">Sign Out</span>
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-template #guestButtons>
+          <a
+            routerLink="/auth/login"
+            class="px-4 py-2 text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
+          >
+            Sign In
+          </a>
+          <a
+            routerLink="/auth/register"
+            [class]="'px-4 py-2 text-sm rounded-lg transition-colors ' + themeConfig().accent"
+          >
+            Sign Up
+          </a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</header>
+
+<app-theme-selector *ngIf="showThemeSelector" (close)="closeThemeSelector()"></app-theme-selector>

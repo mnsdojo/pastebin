@@ -1,0 +1,33 @@
+<footer [class]="'border-t ' + themeConfig().border + ' mt-20'">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex items-center justify-between text-sm text-zinc-500">
+      <p>&copy; {{ currentYear }} PasteBinX. All rights reserved.</p>
+      <div class="flex items-center gap-6">
+        <a 
+          routerLink="/about" 
+          class="hover:text-zinc-300 transition-colors"
+        >
+          About
+        </a>
+        <a 
+          routerLink="/api-docs" 
+          class="hover:text-zinc-300 transition-colors"
+        >
+          API
+        </a>
+        <a 
+          routerLink="/terms" 
+          class="hover:text-zinc-300 transition-colors"
+        >
+          Terms
+        </a>
+        <a 
+          routerLink="/privacy" 
+          class="hover:text-zinc-300 transition-colors"
+        >
+          Privacy
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
