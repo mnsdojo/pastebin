@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environment/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { CreatePasteInput, Paste, UpdatePasteInput } from '../models/paste.model';
+import { CreatePasteInput, Paste, UpdatePasteInput, GetPublicPastesResponse } from '../models/paste.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -20,10 +20,10 @@ export class PasteService {
     return this.http.get<Paste>(`${this.apiUrl}/${id}`);
   }
 
-  getPublicPastes(page: number = 1, limit: number = 20): Observable<Paste[]> {
+  getPublicPastes(page: number = 1, limit: number = 20): Observable<GetPublicPastesResponse> {
     const params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
 
-    return this.http.get<Paste[]>(`${this.apiUrl}/public`, { params });
+    return this.http.get<GetPublicPastesResponse>(`${this.apiUrl}/public`, { params });
   }
 
   getUserPastes(): Observable<Paste[]> {

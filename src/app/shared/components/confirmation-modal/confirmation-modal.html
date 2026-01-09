@@ -1,0 +1,52 @@
+<div *ngIf="isOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Backdrop, show/hide based on modal state. -->
+    <div class="fixed inset-0 bg-gray-900/75 bg-opacity-75 transition-opacity blur-sm" aria-hidden="true" (click)="onClose()"></div>
+  
+    <div class="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+      <!-- This element is to trick the browser into centering the modal contents. -->
+      <span class="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
+  
+      <div
+        class="relative inline-block transform overflow-hidden rounded-2xl bg-white text-left align-bottom shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle border border-gray-100"
+      >
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div
+              class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10 {{iconColorClass}}"
+            >
+              <lucide-icon [img]="icon" [size]="24" class="h-6 w-6" aria-hidden="true"></lucide-icon>
+            </div>
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+              <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">{{title}}</h3>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500">{{message}}</p>
+              </div>
+            </div>
+            <button
+                type="button"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-500 focus:outline-none"
+                (click)="onClose()"
+            >
+                <lucide-icon [img]="X" [size]="20" class="h-5 w-5"></lucide-icon>
+            </button>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+          <button
+            type="button"
+            class="inline-flex w-full justify-center rounded-lg px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 {{confirmButtonClass}}"
+            (click)="onConfirm()"
+          >
+            {{confirmText}}
+          </button>
+          <button
+            type="button"
+            class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+            (click)="onClose()"
+          >
+            {{cancelText}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,1 +1,71 @@
-<p>explore works!</p>
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold mb-2">Explore</h1>
+      <p class="text-zinc-400">Discover public pastes from the community</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex items-center justify-center py-20">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error() && !loading()"
+    class="bg-red-500/10 border border-red-500 text-red-500 rounded-lg p-4 text-center">
+    <p>{{ error() }}</p>
+    <button (click)="loadPublicPastes()"
+      class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+      Try Again
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading() && !error() && pastes().length === 0"
+    [class]="'rounded-lg p-12 text-center border ' + themeConfig().card + ' ' + themeConfig().border">
+    <lucide-icon [img]="Globe" [size]="64" class="text-zinc-700 mx-auto mb-4"></lucide-icon>
+    <h3 class="text-xl font-semibold mb-2">No public pastes yet</h3>
+    <p class="text-zinc-400">Be the first to share something with the world!</p>
+  </div>
+
+  <!-- Pastes Grid -->
+  <div *ngIf="!loading() && !error() && pastes().length > 0"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let paste of pastes()" (click)="viewPaste(paste.id)" [class]="'flex flex-col h-full rounded-lg p-5 border transition-all cursor-pointer transform hover:scale-[1.02] ' +
+               themeConfig().card + ' ' + themeConfig().border + ' ' + themeConfig().hover">
+      <!-- Header -->
+      <div class="flex items-start justify-between mb-3">
+        <h3 class="text-lg font-semibold truncate flex-1">{{ paste.title || 'Untitled Paste' }}</h3>
+
+      </div>
+
+      <!-- Preview -->
+      <div class="flex-1 mb-4">
+        <p class="text-sm text-zinc-400 font-mono line-clamp-4 break-words">
+          {{ getPreview(paste.content) }}
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between text-xs text-zinc-500 border-t border-zinc-800/50 pt-3 mt-auto">
+        <div class="flex items-center gap-2">
+          <!-- Author (if we had it, for now generic) -->
+          <span class="flex items-center gap-1">
+            <div
+              class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 font-bold">
+              {{ (paste.title || 'U').charAt(0).toUpperCase() }}
+            </div>
+            <span>Anonymous</span>
+          </span>
+        </div>
+
+        <span class="flex items-center gap-1.5">
+          <lucide-icon [img]="Clock" [size]="14"></lucide-icon>
+          <span>{{ formatDate(paste.createdAt) }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

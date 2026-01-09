@@ -1,5 +1,6 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { Paste } from '../../core/models/paste.model';
+import { ConfirmationModal } from '../../shared/components/confirmation-modal/confirmation-modal';
 import {
   LucideAngularModule,
   FileText,
@@ -21,7 +22,7 @@ import { ThemeService } from '../../core/services/theme';
 
 @Component({
   selector: 'app-my-pastes',
-  imports: [CommonModule, RouterModule, LucideAngularModule],
+  imports: [CommonModule, RouterModule, LucideAngularModule, ConfirmationModal],
   templateUrl: './my-pastes.html',
   styleUrl: './my-pastes.css',
 })
@@ -30,6 +31,8 @@ export class MyPastes implements OnInit {
   loading = signal(true);
   error = signal<string>('');
   deletingId = signal<string | null>(null);
+  showDeleteModal = false;
+  pasteToDeleteId: string | null = null;
 
   
   
@@ -101,6 +104,30 @@ export class MyPastes implements OnInit {
     return d.toLocaleDateString();
   }
 
+  deletePaste(id: string) {
+    this.pasteToDeleteId = id;
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete() {
+    if (!this.pasteToDeleteId) return;
+    
+    this.pasteService.deletePaste(this.pasteToDeleteId).subscribe({
+      next: () => {
+        this.loadPastes();
+        this.closeDeleteModal();
+      },
+      error: (error) => {
+        this.error.set(error.message || 'Failed to delete paste');
+        this.closeDeleteModal();
+      },
+    });
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.pasteToDeleteId = null;
+  }
   getVisibilityIcon(visibility: string) {
     switch (visibility) {
       case 'public':

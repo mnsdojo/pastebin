@@ -28,3 +28,7 @@ export interface UpdatePasteInput {
   visibility?: PasteVisibility;
   expiresAt?: Date | string | null;
 }
+export interface GetPublicPastesResponse {
+  pastes: Paste[];
+  metadata: any;
+}
