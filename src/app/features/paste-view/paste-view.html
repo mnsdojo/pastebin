@@ -1,1 +1,74 @@
-<p>paste-view works!</p>
+<div class="max-w-4xl mx-auto space-y-6">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex items-center justify-center py-20">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error() && !loading()"
+    class="bg-red-500/10 border border-red-500 text-red-500 rounded-lg p-4 text-center">
+    <p>{{ error() }}</p>
+    <a routerLink="/explore"
+      class="inline-block mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+      Back to Explore
+    </a>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading() && !error() && paste()" class="space-y-6">
+    <!-- Header -->
+    <div [class]="'rounded-lg p-6 border ' + themeConfig().card + ' ' + themeConfig().border">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <h1 class="text-2xl font-bold mb-2 break-all">{{ paste()?.title || 'Untitled Paste' }}</h1>
+          <div class="flex items-center gap-4 text-sm text-zinc-400">
+            <span class="flex items-center gap-1.5">
+              <lucide-icon [img]="User" [size]="16"></lucide-icon>
+              <span>{{ paste()?.user?.username || 'Anonymous' }}</span>
+            </span>
+            <span class="flex items-center gap-1.5">
+              <lucide-icon [img]="Clock" [size]="16"></lucide-icon>
+              <span>{{ formatDate(paste()?.createdAt) }}</span>
+            </span>
+            <span class="flex items-center gap-1.5" *ngIf="paste()?.visibility === 'public'">
+              <lucide-icon [img]="Globe" [size]="16"></lucide-icon>
+              <span>Public</span>
+            </span>
+            <span class="flex items-center gap-1.5" [class.text-red-400]="paste()?.expiresAt">
+              <lucide-icon [img]="Calendar" [size]="16"></lucide-icon>
+              <span>{{ paste()?.expiresAt ? 'Expires ' + formatDate(paste()?.expiresAt) : 'Never Expires' }}</span>
+            </span>
+          </div>
+        </div>
+
+        <button (click)="shareLink()"
+          class="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 transition-colors font-medium text-sm">
+          <lucide-icon [img]="isLinkCopied() ? Check : Share2" [size]="16"></lucide-icon>
+          <span>{{ isLinkCopied() ? 'Copied Link' : 'Share' }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Code Block -->
+    <div [class]="'rounded-lg border overflow-hidden ' + themeConfig().card + ' ' + themeConfig().border">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-zinc-800 bg-zinc-900/50">
+        <span class="text-sm text-zinc-400 font-mono">
+          <lucide-icon [img]="FileText" [size]="14" class="inline mr-2"></lucide-icon>
+          Raw Content
+        </span>
+        <button (click)="copyToClipboard()"
+          class="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-zinc-800 transition-colors text-xs text-zinc-400 font-medium">
+          <lucide-icon [img]="isCopied() ? Check : Copy" [size]="14" [class]="isCopied() ? 'text-emerald-500' : ''">
+          </lucide-icon>
+          <span [class]="isCopied() ? 'text-emerald-500' : ''">
+            {{ isCopied() ? 'Copied!' : 'Copy' }}
+          </span>
+        </button>
+      </div>
+      <div class="p-0 overflow-x-auto">
+        <pre
+          class="p-4 bg-zinc-950/50 font-mono text-sm leading-relaxed text-zinc-300 min-w-full"><code #codeBlock>{{ paste()?.content }}</code></pre>
+      </div>
+    </div>
+  </div>
+</div>

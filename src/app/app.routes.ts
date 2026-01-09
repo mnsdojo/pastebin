@@ -21,6 +21,11 @@ export const routes: Routes = [
         path: 'explore',
         loadComponent: () => import('./features/explore/explore').then((m) => m.Explore),
         title: 'Explore - PasteBinX',
+      },
+      {
+        path: 'paste/:id',
+        loadComponent: () => import('./features/paste-view/paste-view').then((m) => m.PasteView),
+        title: 'View Paste - PasteBinX',
       }
     ],
   },
