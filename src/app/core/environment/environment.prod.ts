@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://pastebinx-backend.com/api',
+  apiUrl: 'https://pastebinx-backend.com/api',
 };
