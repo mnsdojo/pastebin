@@ -12,6 +12,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home').then((m) => m.Home),
         title: 'PasteBinX - Create Paste',
       },
+      {
+        path: 'my-pastes',
+        loadComponent: () => import('./features/my-pastes/my-pastes').then((m) => m.MyPastes),
+        title: 'My Pastes - PasteBinX',
+      }
     ],
   },
   {

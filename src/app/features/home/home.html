@@ -1,1 +1,135 @@
-<p>home works!</p>
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold mb-2">Create a New Paste</h1>
+      <p class="text-zinc-400">Share your code, text, or notes with the world</p>
+    </div>
+    <lucide-icon [img]="FileText" [size]="48" class="text-emerald-500 opacity-20"></lucide-icon>
+  </div>
+
+  <div
+    *ngIf="error()"
+    class="bg-red-500/10 border border-red-500 text-red-500 rounded-lg p-3 text-sm flex items-start gap-2"
+  >
+    <span class="text-lg">⚠️</span>
+    <span>{{ error() }}</span>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="space-y-6">
+    <div>
+      <label class="block text-sm font-medium mb-2"> Title </label>
+      <input
+        type="text"
+        [(ngModel)]="title"
+        name="title"
+        placeholder="Give your paste a title..."
+        [class]="
+          'w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 ' +
+          themeConfig().input +
+          ' ' +
+          themeConfig().border
+        "
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium mb-2">
+        Content <span class="text-red-500">*</span>
+      </label>
+      <textarea
+        [(ngModel)]="content"
+        name="content"
+        required
+        placeholder="Paste your content here..."
+        rows="20"
+        [class]="
+          'w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 font-mono text-sm resize-none ' +
+          themeConfig().input +
+          ' ' +
+          themeConfig().border
+        "
+      ></textarea>
+      <p class="text-xs text-zinc-500 mt-1">{{ content.length }} characters</p>
+    </div>
+
+    <div [class]="'rounded-lg p-4 space-y-4 ' + themeConfig().card">
+      <h3 class="text-sm font-semibold text-zinc-400 uppercase tracking-wide">Paste Options</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Visibility -->
+        <div>
+          <label class="block text-sm font-medium mb-2">Visibility</label>
+          <select
+            [(ngModel)]="visibility"
+            name="visibility"
+            [class]="
+              'w-full px-4 py-2.5 rounded-lg border transition-colors focus:outline-none focus:border-emerald-500 ' +
+              themeConfig().input +
+              ' ' +
+              themeConfig().border
+            "
+          >
+            <option value="public">🌍 Public - Anyone can view</option>
+            <option value="unlisted">🔗 Unlisted - Only with link</option>
+            <option value="private">🔒 Private - Only you</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2">Expires After</label>
+          <select
+            [(ngModel)]="expiry"
+            name="expiry"
+            [class]="
+              'w-full px-4 py-2.5 rounded-lg border transition-colors focus:outline-none focus:border-emerald-500 ' +
+              themeConfig().input +
+              ' ' +
+              themeConfig().border
+            "
+          >
+            <option value="never">♾️ Never</option>
+            <option value="1h">⏰ 1 Hour</option>
+            <option value="1d">📅 1 Day</option>
+            <option value="1w">📆 1 Week</option>
+            <option value="1m">📊 1 Month</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button
+        type="submit"
+        [disabled]="isSubmitting() || !content.trim()"
+        [class]="
+          'flex-1 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] ' +
+          themeConfig().accent
+        "
+      >
+        <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
+        <span>{{ isSubmitting() ? 'Creating Paste...' : 'Create Paste' }}</span>
+      </button>
+
+      <button
+        type="button"
+        (click)="clear()"
+        [disabled]="isSubmitting()"
+        [class]="
+          'px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 ' +
+          themeConfig().hover
+        "
+      >
+        Clear
+      </button>
+    </div>
+  </form>
+
+  <div [class]="'rounded-lg p-4 border ' + themeConfig().border">
+    <h4 class="font-semibold mb-2 text-sm">💡 Tips</h4>
+    <ul class="text-sm text-zinc-400 space-y-1">
+      <li>• Use <strong>Public</strong> for sharing with everyone</li>
+      <li>• Use <strong>Unlisted</strong> for sharing with specific people via link</li>
+      <li>• Use <strong>Private</strong> for personal notes (requires login)</li>
+      <li>• Set expiration for temporary pastes</li>
+    </ul>
+  </div>
+</div>

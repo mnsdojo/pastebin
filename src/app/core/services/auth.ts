@@ -16,14 +16,17 @@ export type RegisterReturnType = CommonAuthResponse;
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/api/auth`;
+  private apiUrl = `${environment.apiUrl}/auth`;
   private readonly TOKEN_KEY = 'token';
 
   user = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);
   loading = signal<boolean>(true);
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {
     console.log('🏗️ AuthService constructor called');
     console.log('🔑 Current token in localStorage:', localStorage.getItem('token'));
     console.log('🔑 All localStorage keys:', Object.keys(localStorage));
@@ -34,27 +37,27 @@ export class AuthService {
   }
 
   private initAuth() {
-  const token = this.getToken();
+    const token = this.getToken();
 
-  if (!token) {
-    this.loading.set(false);
-    return;
+    if (!token) {
+      this.loading.set(false);
+      return;
+    }
+
+    this.getCurrentUser().subscribe({
+      next: (user) => {
+        this.user.set(user);
+        this.isAuthenticated.set(true);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        if (error.status === 401) {
+          this.clearAuth();
+        }
+        this.loading.set(false);
+      },
+    });
   }
-
-  this.getCurrentUser().subscribe({
-    next: (user) => {
-      this.user.set(user);
-      this.isAuthenticated.set(true);
-      this.loading.set(false);
-    },
-    error: (error) => {
-      if (error.status === 401) {
-        this.clearAuth();
-      }
-      this.loading.set(false);
-    },
-  });
-}
   login(credentials: LoginCredentials): Observable<LoginReturnType> {
     return this.http.post<LoginReturnType>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response) => {
@@ -62,7 +65,7 @@ export class AuthService {
         this.user.set(response.user);
         this.isAuthenticated.set(true);
       }),
-      catchError(this.handleError)
+      catchError(this.handleError),
     );
   }
 
@@ -73,7 +76,7 @@ export class AuthService {
         this.user.set(response.user);
         this.isAuthenticated.set(true);
       }),
-      catchError(this.handleError)
+      catchError(this.handleError),
     );
   }
 
